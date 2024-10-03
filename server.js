@@ -23,9 +23,9 @@ if (!mongoUri) {
   process.exit(1); // Termina el proceso si no hay URI
 }
 
-mongoose.connect(mongoUri)
-  .then(() => console.log('MongoDB conectado'))
-  .catch((err) => console.error('Error conectando a MongoDB:', err));
+mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Conectado a MongoDB de forma segura'))
+  .catch(err => console.error('Error conectando a MongoDB:', err));
 
 // Rutas
 app.use('/api/auth', authRoutes);
