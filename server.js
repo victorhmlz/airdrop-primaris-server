@@ -9,13 +9,13 @@ import getUserRoute from './routes/getUserRoute.js';
 dotenv.config(); // Cargar variables de entorno desde el archivo .env
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Conectar a MongoDB (sin las opciones deprecadas)
+// Conectar a MongoDB
 const mongoUri = process.env.MONGO_URI;
 
 if (!mongoUri) {
@@ -32,7 +32,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/quests', questRoutes);
 app.use('/api/getUser', getUserRoute);
 
-// Servir en el puerto
+
+// Ruta raíz para verificar que el servidor está funcionando
+app.get("/", (req, res) => res.send("Express on Vercel"));
+
+// Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
+
+// Exportar la aplicación
+export default app;
