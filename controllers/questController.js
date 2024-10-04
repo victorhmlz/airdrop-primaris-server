@@ -15,37 +15,33 @@ export const checkQuest = async (telegramUserName) => {
 
     console.log(`[checkQuest] Usuario encontrado: ${user.telegramUserName}`);
 
-    if (!user.telegramUserId || user.telegramUserId == 0) {
-      console.log(`[checkQuest] El telegramUserId no es válido (${user.telegramUserId}). Esperando a que el usuario valide su cuenta.`);
-      return {
-        questsCompleted: false,
-        message: 'Falta validar la cuenta de Telegram',
-        followTelegram: false,
-        joinTelegramGroup: false,
-        joinDiscordChannel: false,
-        heriticsConverted: user.heriticsConverted
-      };
+
+    if (user.telegramUserId && user.telegramUserId != 0) {
+      console.log(`[checkQuest] Verificando en Telegram channel con ID: ${user.telegramUserId}`);
+      const telegramChannelCheck = await isUserInTelegramChannel(user.telegramUserId);
+      console.log(`[checkQuest] Resultado de Telegram Channel Check: ${telegramChannelCheck}`);
+
+      console.log(`[checkQuest] Verificando en Telegram group con ID: ${user.telegramUserId}`);
+      const telegramGroupCheck = await isUserInTelegramGroup(user.telegramUserId);
+      console.log(`[checkQuest] Resultado de Telegram Group Check: ${telegramGroupCheck}`);
+
+      user.followTelegram = telegramChannelCheck;
+      user.joinTelegramGroup = telegramGroupCheck;
     }
 
-    console.log(`[checkQuest] Verificando en Telegram channel con ID: ${user.telegramUserId}`);
-    const telegramChannelCheck = await isUserInTelegramChannel(user.telegramUserId);
-    console.log(`[checkQuest] Resultado de Telegram Channel Check: ${telegramChannelCheck}`);
+    if (user.discordId && user.discordId != 0) {
+      console.log(`[checkQuest] Verificando en Discord con ID: ${user.discordId}`);
+      const discordCheck = await isUserInDiscordChannel(user.discordId);
+      console.log(`[checkQuest] Resultado de Discord Check: ${discordCheck}`);
 
-    console.log(`[checkQuest] Verificando en Telegram group con ID: ${user.telegramUserId}`);
-    const telegramGroupCheck = await isUserInTelegramGroup(user.telegramUserId);
-    console.log(`[checkQuest] Resultado de Telegram Group Check: ${telegramGroupCheck}`);
-
-    console.log(`[checkQuest] Verificando en Discord con ID: ${user.discordId}`);
-    const discordCheck = await isUserInDiscordChannel(user.discordId);
-    console.log(`[checkQuest] Resultado de Discord Check: ${discordCheck}`);
+      user.joinDiscordChannel = discordCheck;
+    }
 
     console.log(`[checkQuest] Actualizando el estado del usuario en base a las verificaciones`);
 
-    user.followTelegram = telegramChannelCheck;
-    user.joinTelegramGroup = telegramGroupCheck;
-    user.joinDiscordChannel = discordCheck;
-
     const referredByUser = await User.findOne({ ownedReferralTicket: user.referralTicket });
+
+    // UPDATING HERETICSCONVERTEDPOINTS OF REFERRAL
 
     if (user.followTelegram &&
         user.joinTelegramGroup &&
@@ -59,6 +55,8 @@ export const checkQuest = async (telegramUserName) => {
       await referredByUser.save();
       await user.save();
     }
+
+    // UPDATING QUEST COMPLETE STATE
 
     if (user.followTelegram &&
         user.joinTelegramGroup &&
