@@ -71,9 +71,9 @@ export const checkQuest = async (telegramUserName) => {
     console.log(`[checkQuest] Estado del usuario guardado correctamente`);
 
     return {
-      followTelegram: telegramChannelCheck,
-      joinTelegramGroup: telegramGroupCheck,
-      joinDiscordChannel: discordCheck,
+      followTelegram: user.followTelegram,
+      joinTelegramGroup: user.joinTelegramGroup,
+      joinDiscordChannel: user.joinDiscordChannel,
       heriticsConverted: user.heriticsConverted,
       questsCompleted: user.questsCompleted
     };
