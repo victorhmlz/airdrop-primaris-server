@@ -16,7 +16,6 @@ mongoose.connect(process.env.MONGO_URI, {
   .then(() => console.log('Database connection successful'))
   .catch((err) => console.error('Error connecting to the database:', err));
 
-// Config telegram bot
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
 bot.command('validate', async (ctx) => {
