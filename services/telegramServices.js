@@ -1,7 +1,9 @@
-// telegramService.js
 import axios from 'axios';
+import dotenv from 'dotenv';
 
-const TELEGRAM_BOT_TOKEN = '6874550407:AAEtRSc8TTBUdtJtfP9CVH80rVGbfXFPyos';
+dotenv.config();
+
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_API_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
 const groupId = '-1002258394816';
 const channelId = '-1002168681704';
