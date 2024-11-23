@@ -5,7 +5,7 @@ dotenv.config();
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const DISCORD_API_URL = 'https://discord.com/api';
-const guildId = '1263634147138867302';
+const guildId = process.env.GUILD_ID;
 
 export const isUserInDiscordChannel = async (userDiscordId) => {
   try {
